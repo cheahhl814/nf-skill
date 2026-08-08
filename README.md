@@ -56,12 +56,3 @@ md5sum nextflow-docs-corpus/nextflow-dsl/*.md nextflow-docs-corpus/nfcore-style/
 | `https://nf-co.re/docs/contributing/guidelines` (nf-core style, Astro/Starlight) | manual extraction + docs-ingest lua-filter | 1 page, 48 KB, 0 boilerplate hits, 34 `modules` mentions, 17 `subworkflow`, 39 `label` mentions |
 
 The Astro/Starlight framework used by nf-co.re is not yet supported by docs-ingest's default content selectors; the nf-core page was extracted manually using a `markdown-content` div heuristic. Future work: add Astro/Starlight to docs-ingest's content-selector list.
-
-## Deployment status
-
-This skill exists in `@skills/` but is **not currently deployed** to `~/.pi/agent/skills/`. To deploy:
-
-```bash
-mkdir -p ~/.pi/agent/skills/nextflow-pipelines
-cp -r /home/cheahhl814/claude_workspace/bioinformatics/AIx-BIO/skills/nextflow-pipelines/* ~/.pi/agent/skills/nextflow-pipelines/
-```
