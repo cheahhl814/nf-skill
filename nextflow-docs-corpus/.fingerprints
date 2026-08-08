@@ -1,0 +1,15 @@
+# md5 fingerprints (regenerate with: cd nextflow-docs-corpus && find . -type f -name '*.md' -exec md5sum {} + | sort)
+05068bdad98eaba0be076282f1b0034b  ./nextflow-dsl/config.md
+06b71685228a7dfa475c91c4195e10e0  ./nextflow-dsl/amazons3.md
+220b896581f0983a3e41b657626abe17  ./nextflow-dsl/channel.md
+28c862c4396b9065d1bbc75fbcabb420  ./README.md
+37b2a1626779ab01d526659abcf8d814  ./nextflow-dsl/getstarted.md
+51819ae01aab9c8b7c414d09b422fcab  ./nfcore-style/guidelines.md
+591bfee2e289fff12ddd9fa4c362ea03  ./nextflow-dsl/basic.md
+62e511a550fd962e40356ace094be746  ./nextflow-dsl/process.md
+6970e9faafdaa05f3599878d5bc4d30f  ./nextflow-dsl/executor.md
+72d706e35474a4b40631eb3b7636c8df  ./nextflow-dsl/sharing.md
+c8b038f620e7f6f8bacca7316499465b  ./nextflow-dsl/tracing.md
+d6658cb68d75941466f7eb50c2f3fc60  ./nextflow-dsl/index.md
+e2402b3dbbd7a885352de91d5b63c628  ./nextflow-dsl/operator.md
+f04ff97fc7cf0812a1f1c89c643f1e57  ./nextflow-dsl/script.md
