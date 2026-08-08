@@ -1,58 +1,94 @@
 # Nextflow Pipelines
 
-Build scalable, containerized, reproducible bioinformatics pipelines with Nextflow DSL2. Covers clean code standards, modular design, config separation, containerization, cloud execution, and version-aware syntax maintenance.
+Build scalable, containerized, reproducible bioinformatics pipelines with Nextflow DSL2. This skill teaches clean-code standards and ships a verified Markdown corpus of the official Nextflow DSL2 reference and nf-core contributing guidelines, so an AI agent can answer both "how should I write this?" and "what is the exact syntax?".
 
 ## What's in this skill
 
-- **`SKILL.md`** — Clean code standards for Nextflow DSL2 pipelines (498 lines, 18 KB): pipeline skeleton, `main.nf`, `nextflow.config`, process modules, subworkflows, channel operations, error handling, caching, container best practices, cloud execution, quantitative thresholds, and pitfalls.
-- **`nextflow-docs-corpus/`** — Verified Markdown corpus of the Nextflow DSL2 reference (12 pages from `nextflow.io/docs/latest/`) and nf-core contributing guidelines (1 page from `nf-co.re/docs/contributing/guidelines`). Total ~285 KB of clean Markdown, ingested on 2026-08-08 via the [`docs-ingest`](../docs-ingest/) skill. See `nextflow-docs-corpus/README.md` for the full inventory and per-file provenance.
+- **`SKILL.md`** — Clean code standards for Nextflow DSL2 pipelines: pipeline skeleton, `main.nf`, `nextflow.config`, process modules, subworkflows, channel operations, error handling, caching, container best practices, cloud execution, quantitative thresholds, and pitfalls.
+- **`nextflow-docs-corpus/`** — Verified Markdown corpus (~285 KB) ingested from official sources on 2026-08-08:
+  - `nextflow-dsl/` — 12 pages from the official Nextflow DSL2 reference (process, channel, operator, config, executor, script, sharing, tracing, basic, getstarted, index, amazons3).
+  - `nfcore-style/guidelines.md` — nf-core mandatory requirements (DSL2, MIT license, Docker, CI testing, semantic versioning, nf-core lint, …) and best-practice recommendations (Bioconda, nf-test, DOIs, cloud portability, …).
 
 ## When to use
 
-- "Build a Nextflow pipeline for variant calling"
-- "Write a DSL2 process with container + cpus + memory directives"
-- "Convert my Snakemake workflow to Nextflow"
+- "Build a Nextflow pipeline for variant calling / RNA-seq / ChIP-seq"
+- "Write a DSL2 process with container, cpus, memory, and time directives"
+- "Convert a Snakemake workflow to Nextflow"
 - "Set up a multi-profile config (local / SLURM / AWS Batch)"
 - "What's the exact syntax for `Channel.fromFilePairs` with glob patterns?"
 - "What does nf-core require for the lint tests?"
 
 ## Two complementary resources
 
-This skill teaches **how to write pipelines well** (judgment, standards, architecture). The `nextflow-docs-corpus/` provides **verbatim syntax reference** (every `process` directive, every channel operator, every executor name) ingested from official sources.
+The skill and the corpus answer different kinds of questions:
 
-Use the skill for "should I…" questions. Use the corpus for "what is…" questions.
+| Question type | Resource |
+|---|---|
+| "Should I…?" (judgment, style, architecture) | **`SKILL.md`** — standards and rationale |
+| "What is…?" (verbatim syntax, official options) | **`nextflow-docs-corpus/`** — every process directive, channel operator, executor name |
 
-## Re-ingesting the corpus
+A typical workflow: read `SKILL.md` for the architecture, then `grep` the corpus for the exact syntax of the directive you're writing.
 
-The corpus was ingested on 2026-08-08. Re-ingest when:
+## How to use this skill
 
-- A new Nextflow minor release ships (24.10, 25.04, 25.10, …)
-- nf-core publishes a major style-guide revision
-- The corpus's `.fingerprints` no longer match what you see
+This skill is consumed by **AI coding agents** (Pi, Claude Code, Codex, Opencode, etc.), not by humans directly. To use it, point your agent at the repository URL:
 
-See `nextflow-docs-corpus/README.md` for the re-ingestion procedure.
-
-## Quick start
-
-```bash
-# Read the skill
-cat SKILL.md
-
-# Search the corpus for syntax
-grep -rn "errorStrategy 'retry'" nextflow-docs-corpus/nextflow-dsl/
-grep -rn "process.high" nextflow-docs-corpus/nfcore-style/
-
-# Verify corpus integrity
-md5sum nextflow-docs-corpus/nextflow-dsl/*.md nextflow-docs-corpus/nfcore-style/*.md \
-  | diff - nextflow-docs-corpus/.fingerprints
-# Should be identical (after stripping the leading '# md5 fingerprints...' comment line)
+```
+Import the skill from https://github.com/cheahhl814/nextflow-pipelines
+into your skills directory.
 ```
 
-## Battle test
+The agent harness loads `SKILL.md` for instructions and can read the corpus files verbatim. After import, the agent will recognise triggers like *"build a Nextflow pipeline"*, *"DSL2 module"*, or *"nf-core lint"* and route to this skill.
 
-| Source | Strategy | Outcome |
-|---|---|---|
-| `https://www.nextflow.io/docs/latest/` (Nextflow DSL docs, Docusaurus) | docs-ingest Strategy 2 (sitemap) + `filters/strip_docusaurus.lua` | 12 pages, 237 KB, 0 boilerplate hits, all key DSL keywords present (23 `process` declarations, 11 `workflow` blocks, 19 `Channel.from`, 16 `script:`, 13 `output:`) |
-| `https://nf-co.re/docs/contributing/guidelines` (nf-core style, Astro/Starlight) | manual extraction + docs-ingest lua-filter | 1 page, 48 KB, 0 boilerplate hits, 34 `modules` mentions, 17 `subworkflow`, 39 `label` mentions |
+## File structure
 
-The Astro/Starlight framework used by nf-co.re is not yet supported by docs-ingest's default content selectors; the nf-core page was extracted manually using a `markdown-content` div heuristic. Future work: add Astro/Starlight to docs-ingest's content-selector list.
+```
+nextflow-pipelines/
+├── README.md                       # This file
+├── SKILL.md                        # Clean-code standards (read this first)
+└── nextflow-docs-corpus/
+    ├── README.md                   # Corpus inventory + provenance
+    ├── .fingerprints               # md5sums (staleness detection)
+    ├── nextflow-dsl/               # 12 Nextflow DSL reference pages
+    │   ├── process.md              # All process directives
+    │   ├── channel.md              # Channel factories
+    │   ├── operator.md             # Channel operators (largest file, ~94 KB)
+    │   ├── config.md               # nextflow.config schema
+    │   ├── executor.md             # Executor list
+    │   ├── script.md               # Script-level constructs
+    │   ├── sharing.md              # Module sharing, Wave, Fusion
+    │   ├── tracing.md              # Execution trace, reports, timeline
+    │   ├── basic.md                # Script basics
+    │   ├── getstarted.md           # First-script tutorial
+    │   ├── index.md                # Landing page
+    │   └── amazons3.md             # AWS S3 (cloud-only)
+    └── nfcore-style/
+        └── guidelines.md           # nf-core requirements + recommendations
+```
+
+## Corpus re-ingestion
+
+The corpus is a snapshot of upstream documentation. To refresh it when Nextflow ships a new release or nf-core revises guidelines, you need an HTML→Markdown converter (the corpus was produced with `pandoc` plus a Lua filter that unwraps framework noise like Docusaurus's `theme-*` divs). See `nextflow-docs-corpus/README.md` for the full procedure.
+
+If you only consume the corpus and don't re-ingest, you don't need any external tool — the Markdown files are self-contained and read like normal documentation.
+
+## Provenance
+
+| Source | Date | Pages | Total size |
+|---|---|---|---|
+| `https://www.nextflow.io/docs/latest/` (Nextflow DSL docs, Docusaurus) | 2026-08-08 | 12 | 237 KB |
+| `https://nf-co.re/docs/contributing/guidelines` (nf-core style, Astro/Starlight) | 2026-08-08 | 1 | 48 KB |
+
+The nf-core page required manual extraction of the `<div class="markdown-content">` block because the Astro/Starlight framework is not yet supported by docs-ingest's default content selectors. See `nextflow-docs-corpus/README.md` for the technical detail.
+
+## Citation
+
+If this skill helps you write or review a Nextflow pipeline, please cite the upstream sources:
+
+- **Nextflow**: Di Tommaso P, et al. Nextflow enables reproducible computational workflows. *Nature Biotechnology* 35, 316–319 (2017). doi: [10.1038/nbt.3820](https://doi.org/10.1038/nbt.3820)
+- **nf-core**: Ewels PA, et al. The nf-core framework for community-curated bioinformatics pipelines. *Nature Biotechnology* 38, 276–278 (2020). doi: [10.1038/s41587-020-0439-x](https://doi.org/10.1038/s41587-020-0439-x)
+- **This skill**: `cheahhl814/nextflow-pipelines` (https://github.com/cheahhl814/nextflow-pipelines)
+
+## License
+
+This skill's text and code are released under the MIT License. The corpus content is sourced from the official Nextflow documentation (Apache 2.0) and the nf-core contributing guidelines (MIT) and retains those licenses; see `nextflow-docs-corpus/.fingerprints` for the per-file source URLs.
