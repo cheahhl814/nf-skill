@@ -1,94 +1,153 @@
-# Nextflow Pipelines
+# nextflow-pipelines
 
-Build scalable, containerized, reproducible bioinformatics pipelines with Nextflow DSL2. This skill teaches clean-code standards and ships a verified Markdown corpus of the official Nextflow DSL2 reference and nf-core contributing guidelines, so an AI agent can answer both "how should I write this?" and "what is the exact syntax?".
+[![Version](https://img.shields.io/badge/version-3-blue)](#-installation)
+[![Type](https://img.shields.io/badge/type-agent%20skill-blueviolet)](#-installation)
+[![Built with](https://img.shields.io/badge/built%20with-bioinfo--skill--creator-orange)](https://github.com/cheahhl814/bioinfo-skill-creator)
 
-## What's in this skill
+Build scalable, containerized, reproducible bioinformatics pipelines with Nextflow DSL2. Covers clean code standards, modular design, config separation, containerization, cloud execution, and version-aware syntax maintenance. Use when creating portable workflows, nf-core style pipelines, or multi-environment analyses.
 
-- **`SKILL.md`** — Clean code standards for Nextflow DSL2 pipelines: pipeline skeleton, `main.nf`, `nextflow.config`, process modules, subworkflows, channel operations, error handling, caching, container best practices, cloud execution, quantitative thresholds, and pitfalls.
-- **`nextflow-docs-corpus/`** — Verified Markdown corpus (~285 KB) ingested from official sources on 2026-08-08:
-  - `nextflow-dsl/` — 12 pages from the official Nextflow DSL2 reference (process, channel, operator, config, executor, script, sharing, tracing, basic, getstarted, index, amazons3).
-  - `nfcore-style/guidelines.md` — nf-core mandatory requirements (DSL2, MIT license, Docker, CI testing, semantic versioning, nf-core lint, …) and best-practice recommendations (Bioconda, nf-test, DOIs, cloud portability, …).
+**Repository**: https://github.com/cheahhl814/nextflow-pipelines
 
-## When to use
+> [!NOTE]
+> Current version: **v3** (updated 2026-08-08).
 
-- "Build a Nextflow pipeline for variant calling / RNA-seq / ChIP-seq"
-- "Write a DSL2 process with container, cpus, memory, and time directives"
-- "Convert a Snakemake workflow to Nextflow"
-- "Set up a multi-profile config (local / SLURM / AWS Batch)"
-- "What's the exact syntax for `Channel.fromFilePairs` with glob patterns?"
-- "What does nf-core require for the lint tests?"
+## Contents
 
-## Two complementary resources
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Pipeline overview](#-pipeline-overview)
+- [Tools](#-tools)
+- [Update check](#-update-check)
+- [Repository layout](#-repository-layout)
+- [Hard guarantees](#-hard-guarantees)
+- [Provenance](#-provenance)
 
-The skill and the corpus answer different kinds of questions:
+## 🚀 Installation
 
-| Question type | Resource |
-|---|---|
-| "Should I…?" (judgment, style, architecture) | **`SKILL.md`** — standards and rationale |
-| "What is…?" (verbatim syntax, official options) | **`nextflow-docs-corpus/`** — every process directive, channel operator, executor name |
+This is an **agent skill**, not a user-facing library. The recommended install path is to let your AI agent import it.
 
-A typical workflow: read `SKILL.md` for the architecture, then `grep` the corpus for the exact syntax of the directive you're writing.
+**Option A — give your agent this prompt (recommended):**
 
-## How to use this skill
-
-This skill is consumed by **AI coding agents** (Pi, Claude Code, Codex, Opencode, etc.), not by humans directly. To use it, point your agent at the repository URL:
-
+```text
+Install the nextflow-pipelines skill from
+https://github.com/cheahhl814/nextflow-pipelines —
+clone it into your agent's skills directory (the path your agent watches
+for skills) and run `pixi install` from that directory. Then read the
+skill's SKILL.md to understand its phases and the Input/Output contract
+for each. Confirm when the environment is ready.
 ```
-Import the skill from https://github.com/cheahhl814/nextflow-pipelines
-into your skills directory.
+
+**Option B — manual install:**
+
+```bash
+git clone https://github.com/cheahhl814/nextflow-pipelines.git
+cd nextflow-pipelines
+pixi install
 ```
 
-The agent harness loads `SKILL.md` for instructions and can read the corpus files verbatim. After import, the agent will recognise triggers like *"build a Nextflow pipeline"*, *"DSL2 module"*, or *"nf-core lint"* and route to this skill.
+> [!TIP]
+> `pixi install` resolves every pinned tool from `pixi.toml` (channels: conda-forge, bioconda) into an isolated `.pixi/` environment — no system-wide installs, no version conflicts with other skills.
 
-## File structure
+## 💡 Usage
 
+The skill is designed to be driven by an AI agent: the agent reads the master `SKILL.md`, detects the current phase from the filesystem state of your run directory, and routes to the right sub-skill.
+
+### Natural-language prompts that trigger the skill
+
+```text
+nextflow pipeline
+nextflow workflow
+run nextflow
+DSL2 pipeline
+pipeline execution
 ```
+
+### Manual phase execution
+
+If you prefer to drive the phases yourself (or want to re-run a single phase):
+
+```bash
+# Set your run directory (all phase artifacts land here)
+RUN_DIR=/path/to/run-dir
+
+pixi run preflight   # Phase 1 — validate inputs, write preflight.md + params.json
+pixi run run         # Phase 2 — execute the workflow (after preflight ≥ GO)
+pixi run qc          # Phase 3 — build the final report (after run completes)
+pixi run debug       # On failure — interpret stderr via the signature library
+pixi run battle-test # Verify the skill's structural integrity
+```
+
+> [!IMPORTANT]
+> Each phase has an explicit **Inputs/Outputs contract** at the top of its sub-skill `SKILL.md`. If the upstream artifact is missing (e.g. you run `run` before `preflight` passed), the sub-skill refuses to proceed and tells you which phase to run first. Phases are gated on purpose — don't skip them.
+
+## 🔬 Pipeline overview
+
+The analysis follows a phased evidence chain. Each phase consumes the artifacts of the previous phase and gates progression with a Go/No-Go check.
+
+| # | Phase | Goal | Sub-skill | Artifact produced |
+|:--|:------|:-----|:----------|:------------------|
+
+> [!TIP]
+> Read each sub-skill's `SKILL.md` for the full procedure, its ask-user stop points, and its signature library (stderr pattern → cause → fix).
+
+## 🧰 Tools
+
+All tools are resolved from conda-forge/bioconda via the pinned `pixi.toml`.
+
+| Tool | Version | Role |
+|:-----|:--------|:-----|
+
+Tool usage is grounded in the offline `docs-corpus/` snapshots (version-matched `--help`/`man` captures, upstream repo docs, and web docs as fallback) — the agent reads these instead of guessing flags.
+
+## 🔄 Update check
+
+Every skill built with [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) ships a self-update check that compares the deployed git SHA against this upstream repo via `git fetch` — no GitHub API call, no extra dependencies.
+
+```bash
+pixi run update-check
+```
+
+| Verdict | Exit | Meaning |
+|:--------|:-----|:--------|
+| `UP-TO-DATE` | 0 | Local HEAD matches origin/HEAD |
+| `LOCAL-AHEAD` | 0 | Unpushed local commits; no action needed |
+| `BEHIND-BY-N` | 1 | Upstream is N commits ahead → re-pull/re-sync from this repo |
+| `OFFLINE` | 2 | `git fetch` failed; informational only |
+| `NO-ORIGIN` | 2 | No `origin` remote configured; informational only |
+
+## 📁 Repository layout
+
+```text
 nextflow-pipelines/
-├── README.md                       # This file
-├── SKILL.md                        # Clean-code standards (read this first)
-└── nextflow-docs-corpus/
-    ├── README.md                   # Corpus inventory + provenance
-    ├── .fingerprints               # md5sums (staleness detection)
-    ├── nextflow-dsl/               # 12 Nextflow DSL reference pages
-    │   ├── process.md              # All process directives
-    │   ├── channel.md              # Channel factories
-    │   ├── operator.md             # Channel operators (largest file, ~94 KB)
-    │   ├── config.md               # nextflow.config schema
-    │   ├── executor.md             # Executor list
-    │   ├── script.md               # Script-level constructs
-    │   ├── sharing.md              # Module sharing, Wave, Fusion
-    │   ├── tracing.md              # Execution trace, reports, timeline
-    │   ├── basic.md                # Script basics
-    │   ├── getstarted.md           # First-script tutorial
-    │   ├── index.md                # Landing page
-    │   └── amazons3.md             # AWS S3 (cloud-only)
-    └── nfcore-style/
-        └── guidelines.md           # nf-core requirements + recommendations
+├── SKILL.md                 # Master orchestrator (router — start here)
+├── README.md                # This file
+├── pixi.toml                # Pinned tool environment (pixi install)
+├── docs-corpus/             # Offline snapshots of upstream tool docs
+├── bin/
+│   └── skill-update-check.py  # Self-update check (pixi run update-check)
+└── bin/
+    └── scaffold-render.py     # Reproducibility — re-render the skill from params.json
 ```
 
-## Corpus re-ingestion
+## 🔒 Hard guarantees
 
-The corpus is a snapshot of upstream documentation. To refresh it when Nextflow ships a new release or nf-core revises guidelines, you need an HTML→Markdown converter (the corpus was produced with `pandoc` plus a Lua filter that unwraps framework noise like Docusaurus's `theme-*` divs). See `nextflow-docs-corpus/README.md` for the full procedure.
+- **Filesystem evidence chain** — every phase emits the artifact the next phase consumes; the boundary between phases is the filesystem, not agent memory.
+- **Docs-grounded tool usage** — tool flags come from `docs-corpus/`, never from the agent's memory.
+- **Explicit stop points** — ambiguous decisions are surfaced to you as *Evidence + Recommend + Options*, not auto-picked.
+- **Reproducible environments** — every tool is pinned in `pixi.toml` and resolved via pixi.
 
-If you only consume the corpus and don't re-ingest, you don't need any external tool — the Markdown files are self-contained and read like normal documentation.
+## 🚀 Nextflow runner
+
+This skill does not currently ship a Nextflow runner. For cohort/HPC execution, wrap the `pixi run` tasks in a workflow scheduler of your choice.
 
 ## Provenance
 
-| Source | Date | Pages | Total size |
-|---|---|---|---|
-| `https://www.nextflow.io/docs/latest/` (Nextflow DSL docs, Docusaurus) | 2026-08-08 | 12 | 237 KB |
-| `https://nf-co.re/docs/contributing/guidelines` (nf-core style, Astro/Starlight) | 2026-08-08 | 1 | 48 KB |
+Built with the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill (v1.1.0), following the AiX-BIO skill convention (preflight → build → debug → battle-test evidence chain). Pattern adopted from:
 
-The nf-core page required manual extraction of the `<div class="markdown-content">` block because the Astro/Starlight framework is not yet supported by docs-ingest's default content selectors. See `nextflow-docs-corpus/README.md` for the technical detail.
-
-## Citation
-
-If this skill helps you write or review a Nextflow pipeline, please cite the upstream sources:
-
-- **Nextflow**: Di Tommaso P, et al. Nextflow enables reproducible computational workflows. *Nature Biotechnology* 35, 316–319 (2017). doi: [10.1038/nbt.3820](https://doi.org/10.1038/nbt.3820)
-- **nf-core**: Ewels PA, et al. The nf-core framework for community-curated bioinformatics pipelines. *Nature Biotechnology* 38, 276–278 (2020). doi: [10.1038/s41587-020-0439-x](https://doi.org/10.1038/s41587-020-0439-x)
-- **This skill**: `cheahhl814/nextflow-pipelines` (https://github.com/cheahhl814/nextflow-pipelines)
+- **BettaMt-agents** — https://github.com/cheahhl814/BettaMt-agents
+- **bacterial-genome-analysis** — https://github.com/cheahhl814/bacterial-genome-analysis
+- **amr-gene-screening** — https://github.com/cheahhl814/amr-gene-screening
 
 ## License
 
-This skill's text and code are released under the MIT License. The corpus content is sourced from the official Nextflow documentation (Apache 2.0) and the nf-core contributing guidelines (MIT) and retains those licenses; see `nextflow-docs-corpus/.fingerprints` for the per-file source URLs.
+Released under the MIT License — see the license file in this repository for details.
