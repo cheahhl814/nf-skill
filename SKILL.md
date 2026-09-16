@@ -1,7 +1,7 @@
 ---
-name: nextflow-pipelines
+name: nf-skill
 description: Build scalable, containerized, reproducible bioinformatics pipelines with Nextflow DSL2. Covers clean code standards, modular design, config separation, containerization, cloud execution, and version-aware syntax maintenance. Use when creating portable workflows, nf-core style pipelines, or multi-environment analyses.
-version: 4
+version: 5
 updated: "2026-09-16"
 triggers:
   - "nextflow pipeline"
@@ -534,7 +534,7 @@ nextflow run main.nf \
 
 ## Update Check
 
-This skill ships a self-update check that compares the deployed `SKILL.md` (and the rest of the skill) against the upstream `github.com/cheahhl814/nextflow-pipelines` repo via `git fetch` + SHA diff — no GitHub API call, no extra dependencies.
+This skill ships a self-update check that compares the deployed `SKILL.md` (and the rest of the skill) against the upstream `github.com/cheahhl814/nf-skill` repo via `git fetch` + SHA diff — no GitHub API call, no extra dependencies.
 
 ```bash
 # From this skill's directory:
@@ -544,12 +544,12 @@ pixi run update-check
 # Verdict legend (exit code in parens):
 #   UP-TO-DATE       (0)  local HEAD matches origin/HEAD
 #   LOCAL-AHEAD      (0)  unpushed local commits; no action needed
-#   BEHIND-BY-N      (1)  upstream is N commits ahead → pull: `git -C ~/.agents/skills/nextflow-pipelines pull`
+#   BEHIND-BY-N      (1)  upstream is N commits ahead → pull: `git -C ~/.agents/skills/nf-skill pull`
 #   OFFLINE          (2)  git fetch failed (no network / no credentials); informational
 #   NO-ORIGIN        (2)  no `origin` remote configured; informational
 ```
 
-When `BEHIND-BY-N`, the script prints the canonical fix. Deployment is a **symlink** (`~/.agents/skills/nextflow-pipelines` → the workspace copy in `@skills/nextflow-pipelines/`), so a `git pull` inside the deployed path updates the live skill — no rsync needed. When `OFFLINE`, the script still prints `local_sha` + deployed version so the user can compare by hand. The full implementation is in `bin/skill-update-check.py` (synced from the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill v1.1.0+).
+When `BEHIND-BY-N`, the script prints the canonical fix. Deployment is a **symlink** (`~/.agents/skills/nf-skill` → the workspace copy in `@skills/nf-skill/`), so a `git pull` inside the deployed path updates the live skill — no rsync needed. When `OFFLINE`, the script still prints `local_sha` + deployed version so the user can compare by hand. The full implementation is in `bin/skill-update-check.py` (synced from the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill v1.1.0+).
 
 ## Related Skills
 

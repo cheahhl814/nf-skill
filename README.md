@@ -1,12 +1,12 @@
-# nextflow-pipelines
+# nf-skill
 
-[![Version](https://img.shields.io/badge/version-4-blue)](#-installation)
+[![Version](https://img.shields.io/badge/version-5-blue)](#-installation)
 [![Type](https://img.shields.io/badge/type-agent%20skill-blueviolet)](#-installation)
 [![Built with](https://img.shields.io/badge/built%20with-bioinfo--skill--creator-orange)](https://github.com/cheahhl814/bioinfo-skill-creator)
 
 Build scalable, containerized, reproducible bioinformatics pipelines with Nextflow DSL2. Covers clean code standards, modular design, config separation, containerization, cloud execution, and version-aware syntax maintenance. Use when creating portable workflows, nf-core style pipelines, or multi-environment analyses.
 
-**Repository**: https://github.com/cheahhl814/nextflow-pipelines
+**Repository**: https://github.com/cheahhl814/nf-skill
 
 > [!NOTE]
 > Current version: **v3** (updated 2026-08-08).
@@ -29,8 +29,8 @@ This is an **agent skill**, not a user-facing library. The recommended install p
 **Option A — give your agent this prompt (recommended):**
 
 ```text
-Install the nextflow-pipelines skill from
-https://github.com/cheahhl814/nextflow-pipelines —
+Install the nf-skill skill from
+https://github.com/cheahhl814/nf-skill —
 clone it into your agent's skills directory (the path your agent watches
 for skills) and run `pixi install` from that directory. Then read the
 skill's SKILL.md to understand its phases and the Input/Output contract
@@ -40,8 +40,8 @@ for each. Confirm when the environment is ready.
 **Option B — manual install:**
 
 ```bash
-git clone https://github.com/cheahhl814/nextflow-pipelines.git
-cd nextflow-pipelines
+git clone https://github.com/cheahhl814/nf-skill.git
+cd nf-skill
 pixi install
 ```
 
@@ -118,7 +118,7 @@ pixi run update-check
 ## 📁 Repository layout
 
 ```text
-nextflow-pipelines/
+nf-skill/
 ├── SKILL.md                 # Master orchestrator (router — start here)
 ├── README.md                # This file
 ├── pixi.toml                # Pinned tool environment (pixi install)

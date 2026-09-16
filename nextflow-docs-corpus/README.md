@@ -71,4 +71,4 @@ Re-run the docs-ingest pipeline when:
 
 - A new Nextflow minor release ships (24.10, 25.04, 25.10, …) — DSL additions are usually in release notes first.
 - nf-core publishes a major style-guide revision (e.g., DSL2 → DSL3 if/when announced).
-- The corpus's md5 fingerprints no longer match what's in `nextflow-pipelines/nextflow-docs-corpus/.fingerprints`.
+- The corpus's md5 fingerprints no longer match what's in `nf-skill/nextflow-docs-corpus/.fingerprints`.

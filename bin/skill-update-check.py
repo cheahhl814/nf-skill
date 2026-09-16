@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""nextflow-pipelines skill update check (v3).
+"""nf-skill skill update check (v3).
 
 Compares the deployed skill's git SHA + version to the upstream repo
-(github.com/cheahhl814/nextflow-pipelines). No network calls beyond `git fetch`.
+(github.com/cheahhl814/nf-skill). No network calls beyond `git fetch`.
 
 Verdicts:
   UP-TO-DATE       local HEAD matches origin/HEAD (or origin/<default-branch>)
