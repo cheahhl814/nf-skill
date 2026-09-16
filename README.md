@@ -1,6 +1,6 @@
 # nextflow-pipelines
 
-[![Version](https://img.shields.io/badge/version-3-blue)](#-installation)
+[![Version](https://img.shields.io/badge/version-4-blue)](#-installation)
 [![Type](https://img.shields.io/badge/type-agent%20skill-blueviolet)](#-installation)
 [![Built with](https://img.shields.io/badge/built%20with-bioinfo--skill--creator-orange)](https://github.com/cheahhl814/bioinfo-skill-creator)
 

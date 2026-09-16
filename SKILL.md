@@ -1,8 +1,8 @@
 ---
 name: nextflow-pipelines
 description: Build scalable, containerized, reproducible bioinformatics pipelines with Nextflow DSL2. Covers clean code standards, modular design, config separation, containerization, cloud execution, and version-aware syntax maintenance. Use when creating portable workflows, nf-core style pipelines, or multi-environment analyses.
-version: 3
-updated: "2026-08-08"
+version: 4
+updated: "2026-09-16"
 triggers:
   - "nextflow pipeline"
   - "nextflow workflow"
@@ -95,10 +95,18 @@ Nextflow evolves rapidly. **Always check your version before writing or adapting
 | 21.04+      | DSL2 stable; `nextflow.enable.dsl = 2` required          |
 | 22.04+      | `workflow` keyword mandatory in DSL2; `emit:` preferred  |
 | 23.04+      | Strict mode warnings; plugin system overhaul             |
-| 23.10+      | Current stable; `nextflow.config` auto-discovery changes |
-| 24.x+       | Future; check release notes for breaking changes         |
+| 23.10       | `nextflow.config` auto-discovery changes                 |
+| 25.04       | Workflow outputs 3rd preview (BREAKING: `publish:` section allowed only in the entry workflow; outputs assigned, not `>>`-chained; default publish dir is the base outdir, not a subdirectory) |
+| 25.10 (stable LTS) | BREAKING: `google-lifesciences` executor **removed** (Cloud Life Sciences API discontinued Jul 2025 — use `google-batch`); AWS Java SDK v1 → v2 (credential/endpoint config changes); workflow-outputs preview changes — remove legacy feature flags when upgrading |
+| 25.10.x     | Current stable line (25.10.5); v2 parser fixes; strict-syntax runtime checks tightened |
+| 26.x-edge   | Experimental: AI agent primitive (agents as first-class tasks), `smolvm` container engine, `singularity.resourceLimits`, formatter preserves comments — do not depend on edge features in production pipelines |
 
 **Rule:** Before writing a new pipeline, run `nextflow -version`, open the docs for that version, and cross-check any syntax that looks unfamiliar. **Never assume DSL2 syntax from a 2-year-old tutorial still works.**
+
+### Modern directions (next: workflow outputs & strict syntax)
+
+- **Workflow outputs (`publish:` in the entry workflow)** — the declarative successor to `publishDir` (preview since 25.04, refined in 25.10). Outputs are *assigned* in the workflow `publish:` block, and only the entry workflow may declare it. **Continue using `publishDir` per-process for now** (it remains fully supported and nf-core still uses it); port to `publish:` only when targeting ≥ 25.10 exclusively — the two mechanisms must not be mixed on the same output.
+- **Strict syntax** — opt in with `nextflow enable strict` (or `nextflow run -strict-syntax`): catches undeclared variables/params, deprecated syntax, and ambiguous channel composition at parse time. Recommended for new pipelines; fixes for 25.10.x strict-mode false positives landed through 25.10.4/5.
 
 ## Verified Syntax Reference — Ingested Corpus
 
@@ -124,14 +132,12 @@ The skill teaches **how to write pipelines**. The corpus provides **verbatim syn
 
 ### Re-ingesting the corpus
 
-The corpus was ingested on **2026-08-08** using the [`docs-ingest`](../docs-ingest/) skill v4. To re-ingest when Nextflow ships a new release or nf-core revises guidelines:
+The corpus was ingested on **2026-08-08** using the [`docs-ingest`](https://github.com/cheahhl814/docs-ingest) skill. To re-ingest when Nextflow ships a new release or nf-core revises guidelines, re-crawl the target pages into HTML first (docs-ingest workflow: fetch `https://www.nextflow.io/docs/latest/<page>.html` for the 12 core pages + the nf-core guidelines page), then convert:
 
 ```bash
-# Re-ingest Nextflow DSL pages
-python3 ../docs-ingest/html_to_md.py --batch <(ls ../docs-ingest/sites/nextflow_v3/*.html) --outdir nextflow-docs-corpus/nextflow-dsl/
-
-# Re-ingest nf-core guidelines
-python3 ../docs-ingest/html_to_md.py ../docs-ingest/sites/nfcore_style/guidelines.html > nextflow-docs-corpus/nfcore-style/guidelines.md
+# Convert freshly crawled HTML to Markdown (adjust page list to what was re-crawled)
+python3 ../docs-ingest/html_to_md.py --batch <(ls <crawl-dir>/*.html) --outdir nextflow-docs-corpus/nextflow-dsl/
+python3 ../docs-ingest/html_to_md.py <crawl-dir>/nfcore_guidelines.html > nextflow-docs-corpus/nfcore-style/guidelines.md
 
 # Verify zero boilerplate
 grep -rE '(^|\n)\s*<(nav|header|footer)|class="[^"]*(sidebar|breadcrumb)[^"]*"|toggle navigation|site-footer' nextflow-docs-corpus/ | wc -l
@@ -538,12 +544,12 @@ pixi run update-check
 # Verdict legend (exit code in parens):
 #   UP-TO-DATE       (0)  local HEAD matches origin/HEAD
 #   LOCAL-AHEAD      (0)  unpushed local commits; no action needed
-#   BEHIND-BY-N      (1)  upstream is N commits ahead → rsync from @skills/nextflow-pipelines/
+#   BEHIND-BY-N      (1)  upstream is N commits ahead → pull: `git -C ~/.agents/skills/nextflow-pipelines pull`
 #   OFFLINE          (2)  git fetch failed (no network / no credentials); informational
 #   NO-ORIGIN        (2)  no `origin` remote configured; informational
 ```
 
-When `BEHIND-BY-N`, the script prints the canonical fix (rsync from `@skills/nextflow-pipelines/` to `~/.pi/agent/skills/nextflow-pipelines/` per AGENTS.md §4a, then `diff -rq` to verify). When `OFFLINE`, the script still prints `local_sha` + deployed version so the user can compare by hand. The full implementation is in `bin/skill-update-check.py` (synced from the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill v1.1.0+).
+When `BEHIND-BY-N`, the script prints the canonical fix. Deployment is a **symlink** (`~/.agents/skills/nextflow-pipelines` → the workspace copy in `@skills/nextflow-pipelines/`), so a `git pull` inside the deployed path updates the live skill — no rsync needed. When `OFFLINE`, the script still prints `local_sha` + deployed version so the user can compare by hand. The full implementation is in `bin/skill-update-check.py` (synced from the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill v1.1.0+).
 
 ## Related Skills
 
