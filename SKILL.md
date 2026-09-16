@@ -49,7 +49,7 @@ These rules keep pipelines readable, maintainable, and debuggable:
 
 ## Prerequisites
 
-- **Environment**: Active Pixi environment. Refer to `skills/pixi-env-mgmt/SKILL.md`.
+- **Environment**: Active Pixi environment. Refer to [pixi-skill](https://github.com/cheahhl814/pixi-skill).
 - **Input**: FASTQ, BAM, VCF, or other bioinformatics data files.
 - **Compute**: Local, SLURM, AWS Batch, Google Life Sciences, or Kubernetes.
 
@@ -547,7 +547,7 @@ When `BEHIND-BY-N`, the script prints the canonical fix (rsync from `@skills/nex
 
 ## Related Skills
 
-- `skills/pixi-env-mgmt/SKILL.md` — Environment setup for Nextflow and container tools
+- [pixi-skill](https://github.com/cheahhl814/pixi-skill) — Environment setup for Nextflow and container tools
 - `skills/read-qc-analysis/SKILL.md` — FastQC/MultiQC processes for QC pipelines
 - `skills/read-trimming-cleaning/SKILL.md` — fastp/Trimmomatic processes for trimming pipelines
 - `skills/gene-quantification/SKILL.md` — Salmon/kallisto processes for quantification pipelines
