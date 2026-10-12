@@ -1,8 +1,8 @@
 ---
 name: nf-skill
 description: Build scalable, containerized, reproducible bioinformatics pipelines with Nextflow DSL2. Covers clean code standards, modular design, config separation, containerization, cloud execution, and version-aware syntax maintenance. Use when creating portable workflows, nf-core style pipelines, or multi-environment analyses.
-version: 5
-updated: "2026-09-16"
+version: 6
+updated: "2026-10-12"
 triggers:
   - "nextflow pipeline"
   - "nextflow workflow"
@@ -549,7 +549,7 @@ pixi run update-check
 #   NO-ORIGIN        (2)  no `origin` remote configured; informational
 ```
 
-When `BEHIND-BY-N`, the script prints the canonical fix. Deployment is a **symlink** (`~/.agents/skills/nf-skill` → the workspace copy in `@skills/nf-skill/`), so a `git pull` inside the deployed path updates the live skill — no rsync needed. When `OFFLINE`, the script still prints `local_sha` + deployed version so the user can compare by hand. The full implementation is in `bin/skill-update-check.py` (synced from the [bioinfo-skill-creator](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill v1.1.0+).
+When `BEHIND-BY-N`, the script prints the canonical fix. Deployment is a **symlink** (`~/.agents/skills/nf-skill` → the workspace copy in `@skills/nf-skill/`), so a `git pull` inside the deployed path updates the live skill — no rsync needed. When `OFFLINE`, the script still prints `local_sha` + deployed version so the user can compare by hand. The full implementation is in `bin/skill-update-check.py` (synced from the [skill-forge](https://github.com/cheahhl814/bioinfo-skill-creator) meta-skill v1.1.0+).
 
 ## Related Skills
 
